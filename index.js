@@ -171,7 +171,7 @@ app.get('/', (req, res) => {
 // ============================================================
 // START SERVER
 // ============================================================
-const PORT = process.env.PORT || 3978;
+const PORT = process.env.PORT || 8000;
 
 const server = app.listen(PORT, () => {
   console.log('\n' + '='.repeat(60));

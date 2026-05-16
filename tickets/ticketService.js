@@ -165,7 +165,7 @@ async function notifySDTeam(ticket, user) {
           {
             type: 'Action.OpenUrl',
             title: '✅ Mark Resolved',
-            url: `http://localhost:3978/api/tickets/${ticket.ticket_number}/resolve`
+            url: `http://localhost:8000/api/tickets/${ticket.ticket_number}/resolve`
           }
         ]
       }

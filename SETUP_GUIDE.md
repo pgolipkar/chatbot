@@ -86,19 +86,19 @@ npm.cmd start
 Open:
 
 ```text
-http://localhost:3978
+http://localhost:8000
 ```
 
 Health check:
 
 ```text
-http://localhost:3978/health
+http://localhost:8000/health
 ```
 
 Bot endpoint:
 
 ```text
-http://localhost:3978/api/messages
+http://localhost:8000/api/messages
 ```
 
 ## Step 5: Test Conversation in Teams or Bot Framework Emulator

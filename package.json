@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "setup": "node db/setup.js",
-    "ngrok": "ngrok http 3978"
+    "ngrok": "ngrok http 8000"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",

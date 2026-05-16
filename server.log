@@ -6,14 +6,14 @@
 ============================================================
 🤖 HELPDESK BOT SERVER STARTED
 ============================================================
-📡 Bot endpoint:      http://localhost:3978/api/messages
-📊 SD Dashboard:      http://localhost:3978
-❤️  Health check:      http://localhost:3978/health
-🎫 Tickets API:       http://localhost:3978/api/tickets
+📡 Bot endpoint:      http://localhost:8000/api/messages
+📊 SD Dashboard:      http://localhost:8000
+❤️  Health check:      http://localhost:8000/health
+🎫 Tickets API:       http://localhost:8000/api/tickets
 ============================================================
 
 📝 Next steps:
-1. Run ngrok: ngrok http 3978
+1. Run ngrok: ngrok http 8000
 2. Set bot endpoint in Azure to: <ngrok-url>/api/messages
 3. Add bot to MS Teams channel
 
