@@ -67,9 +67,27 @@
       padding: 24px;
     }
 
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(400px, 0.85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .chat-column {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .dashboard-column {
+      grid-column: 1;
+      grid-row: 1;
+      min-width: 0;
+    }
+
     .stats {
       display: grid;
-      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
       gap: 12px;
       margin-bottom: 18px;
     }
@@ -94,7 +112,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
+      grid-template-columns: 1fr;
       gap: 18px;
       align-items: start;
     }
@@ -105,6 +123,10 @@
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 18px;
+    }
+
+    #tickets {
+      overflow-x: auto;
     }
 
     .panel-title {
@@ -260,7 +282,8 @@
     }
 
     .chat-messages {
-      height: 320px;
+      height: calc(100vh - 230px);
+      min-height: 420px;
       overflow-y: auto;
       padding: 16px;
       display: flex;
@@ -309,9 +332,13 @@
     }
 
     @media (max-width: 980px) {
+      .workspace { grid-template-columns: 1fr; }
+      .chat-column { grid-column: 1; grid-row: 2; }
+      .dashboard-column { grid-column: 1; grid-row: 1; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .grid { grid-template-columns: 1fr; }
       header { height: auto; padding: 14px; align-items: flex-start; gap: 10px; flex-direction: column; }
+      .chat-messages { height: 360px; min-height: 320px; }
       .chat-header { align-items: stretch; flex-direction: column; }
       .chat-controls { align-items: stretch; flex-direction: column; }
       .chat-controls input { min-width: 0; width: 100%; }
@@ -329,56 +356,62 @@
   </header>
 
   <main>
-    <section class="chat-shell">
-      <div class="chat-header">
-        <span>Helpdesk Chat</span>
-        <div class="chat-controls">
-          <input id="chat-user-name" type="text" value="Dashboard User" aria-label="Chat display name">
-          <button onclick="restartChat()">Restart Chat</button>
-        </div>
-      </div>
-      <div id="chat-messages" class="chat-messages"></div>
-      <form class="chat-input" onsubmit="sendChatMessage(event)">
-        <input id="chat-text" type="text" autocomplete="off" placeholder="Type 1 for password reset, 2 for account unlock, or describe your issue">
-        <button type="submit" id="chat-send">Send</button>
-      </form>
-    </section>
-
-    <section class="stats">
-      <div class="stat"><div class="stat-label">Total Tickets</div><div class="stat-value" id="s-total">0</div></div>
-      <div class="stat"><div class="stat-label">Open</div><div class="stat-value" id="s-open">0</div></div>
-      <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value" id="s-progress">0</div></div>
-      <div class="stat"><div class="stat-label">Resolved</div><div class="stat-value" id="s-resolved">0</div></div>
-      <div class="stat"><div class="stat-label">Locked Users</div><div class="stat-value" id="s-locked">0</div></div>
-      <div class="stat"><div class="stat-label">Today's Actions</div><div class="stat-value" id="s-today">0</div></div>
-    </section>
-
-    <section class="grid">
-      <div>
-        <div class="panel">
-          <div class="panel-title">
-            <span>Tickets</span>
-            <div class="filters">
-              <button class="active" onclick="setFilter('all', this)">All</button>
-              <button onclick="setFilter('open', this)">Open</button>
-              <button onclick="setFilter('in_progress', this)">In Progress</button>
-              <button onclick="setFilter('resolved', this)">Resolved</button>
+    <section class="workspace">
+      <div class="chat-column">
+        <section class="chat-shell">
+          <div class="chat-header">
+            <span>Helpdesk Chat</span>
+            <div class="chat-controls">
+              <input id="chat-user-name" type="text" value="Dashboard User" aria-label="Chat display name">
+              <button onclick="restartChat()">Restart Chat</button>
             </div>
           </div>
-          <div id="tickets"><div class="loading">Loading tickets...</div></div>
-        </div>
+          <div id="chat-messages" class="chat-messages"></div>
+          <form class="chat-input" onsubmit="sendChatMessage(event)">
+            <input id="chat-text" type="text" autocomplete="off" placeholder="Type 1 for password reset, 2 for account unlock, or describe your issue">
+            <button type="submit" id="chat-send">Send</button>
+          </form>
+        </section>
       </div>
 
-      <div>
-        <div class="panel">
-          <div class="panel-title">Actions Happened</div>
-          <div id="actions"><div class="loading">Loading actions...</div></div>
-        </div>
+      <div class="dashboard-column">
+        <section class="stats">
+          <div class="stat"><div class="stat-label">Total Tickets</div><div class="stat-value" id="s-total">0</div></div>
+          <div class="stat"><div class="stat-label">Open</div><div class="stat-value" id="s-open">0</div></div>
+          <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value" id="s-progress">0</div></div>
+          <div class="stat"><div class="stat-label">Resolved</div><div class="stat-value" id="s-resolved">0</div></div>
+          <div class="stat"><div class="stat-label">Locked Users</div><div class="stat-value" id="s-locked">0</div></div>
+          <div class="stat"><div class="stat-label">Today's Actions</div><div class="stat-value" id="s-today">0</div></div>
+        </section>
 
-        <div class="panel">
-          <div class="panel-title">Current Bot Sessions</div>
-          <div id="sessions"><div class="loading">Loading sessions...</div></div>
-        </div>
+        <section class="grid">
+          <div>
+            <div class="panel">
+              <div class="panel-title">
+                <span>Tickets</span>
+                <div class="filters">
+                  <button class="active" onclick="setFilter('all', this)">All</button>
+                  <button onclick="setFilter('open', this)">Open</button>
+                  <button onclick="setFilter('in_progress', this)">In Progress</button>
+                  <button onclick="setFilter('resolved', this)">Resolved</button>
+                </div>
+              </div>
+              <div id="tickets"><div class="loading">Loading tickets...</div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel">
+              <div class="panel-title">Actions Happened</div>
+              <div id="actions"><div class="loading">Loading actions...</div></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-title">Current Bot Sessions</div>
+              <div id="sessions"><div class="loading">Loading sessions...</div></div>
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   </main>
