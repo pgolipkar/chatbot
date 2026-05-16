@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  helpdesk-bot:
+    build: .
+    container_name: helpdesk-bot
+    ports:
+      - "3978:3978"
+    env_file:
+      - .env
+    volumes:
+      - ./db:/app/db        # Persists your database across restarts
+    restart: unless-stopped
