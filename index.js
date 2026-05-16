@@ -163,6 +163,87 @@ app.get('/api/conversations', (req, res) => {
   res.status(200).json({ conversations, count: conversations.length });
 });
 
+// Browser chat used by the dashboard. This runs the same bot workflow without
+// requiring Bot Framework Emulator, Teams, or an Azure channel registration.
+function createDashboardBotContext({ conversationId, text, userName }) {
+  const replies = [];
+
+  return {
+    activity: {
+      type: 'message',
+      text,
+      channelId: 'dashboard',
+      conversation: { id: conversationId },
+      from: {
+        id: conversationId,
+        name: userName || 'Dashboard User'
+      },
+      recipient: {
+        id: 'helpdesk-dashboard-bot',
+        name: 'Helpdesk Bot'
+      }
+    },
+    sendActivity: async (activity) => {
+      if (typeof activity === 'string') {
+        replies.push({ type: 'message', text: activity });
+        return;
+      }
+
+      if (activity && activity.type !== 'typing') {
+        replies.push({
+          type: activity.type || 'message',
+          text: activity.text || String(activity)
+        });
+      }
+    },
+    getReplies: () => replies
+  };
+}
+
+app.post('/api/dashboard-chat/start', async (req, res) => {
+  const conversationId = req.body.conversationId || `dashboard-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const context = createDashboardBotContext({
+    conversationId,
+    text: '',
+    userName: req.body.userName
+  });
+
+  try {
+    await bot.startNewSession(context);
+    res.status(200).json({ conversationId, replies: context.getReplies() });
+  } catch (error) {
+    console.error('Dashboard chat start error:', error);
+    res.status(500).json({ error: 'Could not start dashboard chat' });
+  }
+});
+
+app.post('/api/dashboard-chat/message', async (req, res) => {
+  const conversationId = req.body.conversationId;
+  const message = String(req.body.message || '').trim();
+
+  if (!conversationId) {
+    return res.status(400).json({ error: 'conversationId is required' });
+  }
+
+  if (!message) {
+    return res.status(400).json({ error: 'message is required' });
+  }
+
+  const context = createDashboardBotContext({
+    conversationId,
+    text: message,
+    userName: req.body.userName
+  });
+
+  try {
+    await bot.handleMessage(context);
+    res.status(200).json({ conversationId, replies: context.getReplies() });
+  } catch (error) {
+    console.error('Dashboard chat message error:', error);
+    res.status(500).json({ error: 'Could not process dashboard chat message' });
+  }
+});
+
 // SD Dashboard HTML page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
@@ -183,10 +264,9 @@ const server = app.listen(PORT, () => {
   console.log(`🎫 Tickets API:       http://localhost:${PORT}/api/tickets`);
   console.log('='.repeat(60));
   console.log('\n📝 Next steps:');
-  console.log('1. Run ngrok: ngrok http', PORT);
-  console.log('2. Set bot endpoint in Azure to: <ngrok-url>/api/messages');
-  console.log('3. Add bot to MS Teams channel');
-  console.log('\n✅ Bot is ready to receive messages!\n');
+  console.log(`1. Open the dashboard chat: http://localhost:${PORT}`);
+  console.log('2. Use the chat panel for password reset and account unlock requests');
+  console.log('\n✅ Dashboard bot is ready to receive messages!\n');
 });
 
 module.exports = server;
