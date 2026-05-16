@@ -1,0 +1,59 @@
+
+> helpdesk-bot@1.0.0 start
+> node index.js
+
+
+============================================================
+🤖 HELPDESK BOT SERVER STARTED
+============================================================
+📡 Bot endpoint:      http://localhost:3978/api/messages
+📊 SD Dashboard:      http://localhost:3978
+❤️  Health check:      http://localhost:3978/health
+🎫 Tickets API:       http://localhost:3978/api/tickets
+============================================================
+
+📝 Next steps:
+1. Run ngrok: ngrok http 3978
+2. Set bot endpoint in Azure to: <ngrok-url>/api/messages
+3. Add bot to MS Teams channel
+
+✅ Bot is ready to receive messages!
+
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="12413"
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="123456"
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="resend"
+📧 [DEV FALLBACK] OTP for John Doe: 123456
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="111111"
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="11111111"
+📨 Received message from Teams
+[03d520d0-50e8-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="11111111"
+📢 [DEV] Would notify SD team: Ticket TKT-2026-0001
+📨 Received message from Teams
+📨 Received message from Teams
+[b3831e40-50ea-11f1-b323-976f2aaa87bd|livechat] State=initial, Message="1"
+📨 Received message from Teams
+[b3831e40-50ea-11f1-b323-976f2aaa87bd|livechat] State=identifying, Message="john.doe"
+📧 [DEV FALLBACK] OTP for John Doe: 123456
+📨 Received message from Teams
+[b3831e40-50ea-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="123456"
+📨 Received message from Teams
+📨 Received message from Teams
+[e6af8d30-50ea-11f1-b323-976f2aaa87bd|livechat] State=initial, Message="2"
+📨 Received message from Teams
+[e6af8d30-50ea-11f1-b323-976f2aaa87bd|livechat] State=identifying, Message="EMP003"
+📧 [DEV FALLBACK] OTP for Alice Johnson: 123456
+📨 Received message from Teams
+[e6af8d30-50ea-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="123456"
+📨 Received message from Teams
+📨 Received message from Teams
+[8859a8f0-50eb-11f1-b323-976f2aaa87bd|livechat] State=initial, Message="1"
+📨 Received message from Teams
+[8859a8f0-50eb-11f1-b323-976f2aaa87bd|livechat] State=identifying, Message="bob.wilson"
+📧 [DEV FALLBACK] OTP for Bob Wilson: 123456
+📨 Received message from Teams
+[8859a8f0-50eb-11f1-b323-976f2aaa87bd|livechat] State=otp_sent, Message="123456"

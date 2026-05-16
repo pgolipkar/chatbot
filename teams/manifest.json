@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.0",
+  "id": "YOUR_AZURE_BOT_APP_ID",
+  "developer": {
+    "name": "Your IT Department",
+    "websiteUrl": "https://yourcompany.com",
+    "privacyUrl": "https://yourcompany.com/privacy",
+    "termsOfUseUrl": "https://yourcompany.com/terms"
+  },
+  "name": {
+    "short": "IT Helpdesk Bot",
+    "full": "IT Helpdesk Bot - Password Reset & Account Unlock"
+  },
+  "description": {
+    "short": "Reset password or unlock your account instantly.",
+    "full": "Your 24/7 IT Helpdesk Assistant. Securely reset your password or unlock your account with OTP verification. If verification fails, a support ticket is automatically created for the IT Service Desk team."
+  },
+  "icons": {
+    "outline": "icon-outline.png",
+    "color": "icon-color.png"
+  },
+  "accentColor": "#0078d4",
+  "bots": [
+    {
+      "botId": "YOUR_AZURE_BOT_APP_ID",
+      "scopes": ["personal", "team", "groupchat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        {
+          "scopes": ["personal"],
+          "commands": [
+            {
+              "title": "Password Reset",
+              "description": "Reset your account password"
+            },
+            {
+              "title": "Account Unlock",
+              "description": "Unlock your locked account"
+            },
+            {
+              "title": "Restart",
+              "description": "Start over"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": []
+}

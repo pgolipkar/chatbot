@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpdesk Bot Dashboard</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --line: #d9e0e8;
+      --text: #17202a;
+      --muted: #667085;
+      --blue: #2563eb;
+      --green: #15803d;
+      --orange: #b45309;
+      --red: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      height: 58px;
+      background: #17202a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:hover { border-color: var(--blue); color: var(--blue); }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .panel-title {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filters button {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .filters button.active {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .muted { color: var(--muted); font-size: 12px; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    .open { background: #fee2e2; color: var(--red); }
+    .in_progress { background: #ffedd5; color: var(--orange); }
+    .resolved { background: #dcfce7; color: var(--green); }
+    .closed { background: #e5e7eb; color: #374151; }
+    .success { background: #dcfce7; color: var(--green); }
+    .failed { background: #fee2e2; color: var(--red); }
+    .pending { background: #dbeafe; color: var(--blue); }
+    .initial { background: #dbeafe; color: var(--blue); }
+    .identifying { background: #ffedd5; color: var(--orange); }
+    .identifying_failed { background: #fee2e2; color: var(--red); }
+    .otp_sent { background: #ffedd5; color: var(--orange); }
+    .completed { background: #dcfce7; color: var(--green); }
+    .failed { background: #fee2e2; color: var(--red); }
+    .high { background: #fee2e2; color: var(--red); }
+    .medium { background: #ffedd5; color: var(--orange); }
+    .low { background: #dcfce7; color: var(--green); }
+
+    .list {
+      padding: 4px 0;
+    }
+
+    .item {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 5px;
+    }
+
+    .item:last-child { border-bottom: none; }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .empty {
+      padding: 28px 16px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .loading {
+      padding: 28px 16px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    select {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px;
+      background: white;
+    }
+
+    @media (max-width: 980px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+      header { height: auto; padding: 14px; align-items: flex-start; gap: 10px; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Helpdesk Bot Dashboard</h1>
+    <div class="header-right">
+      <span id="last-refresh">Not loaded</span>
+      <button onclick="loadAll()">Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats">
+      <div class="stat"><div class="stat-label">Total Tickets</div><div class="stat-value" id="s-total">0</div></div>
+      <div class="stat"><div class="stat-label">Open</div><div class="stat-value" id="s-open">0</div></div>
+      <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value" id="s-progress">0</div></div>
+      <div class="stat"><div class="stat-label">Resolved</div><div class="stat-value" id="s-resolved">0</div></div>
+      <div class="stat"><div class="stat-label">Locked Users</div><div class="stat-value" id="s-locked">0</div></div>
+      <div class="stat"><div class="stat-label">Today's Actions</div><div class="stat-value" id="s-today">0</div></div>
+    </section>
+
+    <section class="grid">
+      <div>
+        <div class="panel">
+          <div class="panel-title">
+            <span>Tickets</span>
+            <div class="filters">
+              <button class="active" onclick="setFilter('all', this)">All</button>
+              <button onclick="setFilter('open', this)">Open</button>
+              <button onclick="setFilter('in_progress', this)">In Progress</button>
+              <button onclick="setFilter('resolved', this)">Resolved</button>
+            </div>
+          </div>
+          <div id="tickets"><div class="loading">Loading tickets...</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-title">Actions Happened</div>
+          <div id="actions"><div class="loading">Loading actions...</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Current Bot Sessions</div>
+          <div id="sessions"><div class="loading">Loading sessions...</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let allTickets = [];
+    let currentFilter = 'all';
+
+    async function loadAll() {
+      await Promise.all([
+        loadStats(),
+        loadTickets(),
+        loadActions(),
+        loadSessions()
+      ]);
+      document.getElementById('last-refresh').textContent = `Last refresh: ${formatDate(new Date())}`;
+    }
+
+    async function loadStats() {
+      const [statsRes, ticketsRes] = await Promise.all([
+        fetch('/api/stats'),
+        fetch('/api/tickets')
+      ]);
+      const stats = await statsRes.json();
+      const ticketData = await ticketsRes.json();
+      const tickets = ticketData.tickets || [];
+
+      document.getElementById('s-total').textContent = stats.total_tickets || 0;
+      document.getElementById('s-open').textContent = stats.open_tickets || 0;
+      document.getElementById('s-progress').textContent = tickets.filter(t => t.status === 'in_progress').length;
+      document.getElementById('s-resolved').textContent = stats.resolved_tickets || 0;
+      document.getElementById('s-locked').textContent = stats.locked_accounts || 0;
+      document.getElementById('s-today').textContent = stats.today_actions || 0;
+    }
+
+    async function loadTickets() {
+      const res = await fetch('/api/tickets');
+      const data = await res.json();
+      allTickets = data.tickets || [];
+      renderTickets();
+    }
+
+    async function loadActions() {
+      const res = await fetch('/api/activity?limit=15');
+      const data = await res.json();
+      const actions = data.actions || [];
+
+      if (actions.length === 0) {
+        document.getElementById('actions').innerHTML = '<div class="empty">No bot actions yet.</div>';
+        return;
+      }
+
+      document.getElementById('actions').innerHTML = `<div class="list">${actions.map(a => `
+        <div class="item">
+          <div class="item-top">
+            <span>${escapeHtml(formatAction(a.action))}</span>
+            <span class="badge ${escapeHtml(a.status || 'pending')}">${escapeHtml(a.status || 'pending')}</span>
+          </div>
+          <div class="muted">${escapeHtml(a.username || 'Unknown user')} | ${formatDate(a.created_at)}</div>
+          <div class="muted">${escapeHtml(a.action_detail || '')}</div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    async function loadSessions() {
+      const res = await fetch('/api/conversations?limit=10');
+      const data = await res.json();
+      const sessions = data.conversations || [];
+
+      if (sessions.length === 0) {
+        document.getElementById('sessions').innerHTML = '<div class="empty">No bot sessions yet.</div>';
+        return;
+      }
+
+      document.getElementById('sessions').innerHTML = `<div class="list">${sessions.map(s => `
+        <div class="item">
+          <div class="item-top">
+            <span>${escapeHtml(sessionTitle(s))}</span>
+            <span class="badge ${escapeHtml(s.state || 'initial')}">${escapeHtml(sessionStatus(s.state))}</span>
+          </div>
+          <div class="muted">User: ${escapeHtml(sessionUser(s))}</div>
+          <div class="muted">Current step: ${escapeHtml(currentStep(s.state))}</div>
+          <div class="muted">Last message: ${escapeHtml((s.context || {}).lastMessage || '-')}</div>
+          <div class="muted">Updated: ${formatDate(s.updated_at)}</div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderTickets() {
+      const tickets = currentFilter === 'all'
+        ? allTickets
+        : allTickets.filter(t => t.status === currentFilter);
+
+      if (tickets.length === 0) {
+        document.getElementById('tickets').innerHTML = '<div class="empty">No tickets for this status.</div>';
+        return;
+      }
+
+      document.getElementById('tickets').innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Ticket</th>
+              <th>User</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Assigned</th>
+              <th>Change Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tickets.map(t => `
+              <tr>
+                <td><strong>${escapeHtml(t.ticket_number)}</strong><div class="muted">${formatDate(t.created_at)}</div></td>
+                <td>${escapeHtml(t.user_name)}<div class="muted">${escapeHtml(t.user_email)}</div></td>
+                <td>${escapeHtml(formatAction(t.ticket_type))}</td>
+                <td><span class="badge ${escapeHtml(t.status)}">${escapeHtml(t.status.replaceAll('_', ' '))}</span></td>
+                <td><span class="badge ${escapeHtml(t.priority || 'medium')}">${escapeHtml(t.priority || 'medium')}</span></td>
+                <td>${escapeHtml(t.assigned_to || 'SD Team')}</td>
+                <td>
+                  <select onchange="updateTicketStatus(${t.id}, this.value)">
+                    <option value="">Select</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function setFilter(filter, button) {
+      currentFilter = filter;
+      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+      renderTickets();
+    }
+
+    async function updateTicketStatus(id, status) {
+      if (!status) return;
+      await fetch(`/api/tickets/${id}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, resolution_notes: `Marked ${status.replaceAll('_', ' ')} from dashboard` })
+      });
+      await loadAll();
+    }
+
+    function sessionUser(session) {
+      const ctx = session.context || {};
+      return ctx.userName || ctx.userEmail || ctx.lastIdentifier || ctx.teamsUserName || 'Not identified yet';
+    }
+
+    function sessionTitle(session) {
+      if (session.action) return formatAction(session.action);
+      return 'Chat Opened';
+    }
+
+    function sessionStatus(state) {
+      const map = {
+        initial: 'Open',
+        identifying: 'In Progress',
+        identifying_failed: 'Needs Ticket',
+        otp_sent: 'In Progress',
+        completed: 'Completed',
+        failed: 'Failed'
+      };
+      return map[state] || 'Open';
+    }
+
+    function currentStep(state) {
+      const map = {
+        initial: 'Waiting for user to choose password reset or account unlock',
+        identifying: 'Waiting for employee ID, username, or email',
+        identifying_failed: 'User not found; waiting to create ticket or retry',
+        otp_sent: 'OTP sent; waiting for OTP verification',
+        completed: 'Bot action completed',
+        failed: 'Ticket created or manual help needed'
+      };
+      return map[state] || 'Waiting';
+    }
+
+    function formatAction(action) {
+      const map = {
+        password_reset: 'Password Reset',
+        account_unlock: 'Account Unlock',
+        auth_failed: 'Auth Failed',
+        otp_requested: 'OTP Sent',
+        otp_failed: 'OTP Failed',
+        ticket_created: 'Ticket Created',
+        ticket_status_changed: 'Ticket Status Changed',
+        account_unlocked: 'Account Unlocked',
+        chat_started: 'Chat Started'
+      };
+      return map[action] || (action ? String(action).replaceAll('_', ' ') : '');
+    }
+
+    function formatDate(value) {
+      if (!value) return '-';
+      return new Date(value).toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    loadAll();
+    setInterval(loadAll, 5000);
+  </script>
+</body>
+</html>

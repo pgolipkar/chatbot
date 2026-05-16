@@ -1,0 +1,26 @@
+{
+  "name": "helpdesk-bot",
+  "version": "1.0.0",
+  "description": "MS Teams Helpdesk Bot for Password Reset and Account Unlock",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "setup": "node db/setup.js",
+    "ngrok": "ngrok http 3978"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "axios": "^1.6.8",
+    "better-sqlite3": "^12.10.0",
+    "botbuilder": "^4.23.3",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3",
+    "express": "^5.2.1",
+    "nodemailer": "^8.0.7",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
